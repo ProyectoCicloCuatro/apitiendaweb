@@ -38,7 +38,7 @@ Venta.listar = function (resultado) {
 }
 
 //metodo que agrega un registro
-Venta.agregar = (producto, resultado) => {
+Venta.agregar = (venta, resultado) => {
     //obtener objeto de conexion a la base de datos
     const basedatos = bd.obtenerBaseDatos();
 
@@ -47,12 +47,12 @@ Venta.agregar = (producto, resultado) => {
         //***** Código Mongo *****
         .insertOne(
             {
-                id: parseInt(producto.id),
-                urlImagen: producto.urlImagen,
-                nombre: producto.nombre,
-                descripcion: producto.descripcion,
-                caracteristicas: producto.caracteristicas,
-                precio: parseFloat(producto.precio),
+                id: parseInt(venta.idVenta),
+                urlImagen: venta.urlImagen,
+                nombre: venta.nombre,
+                descripcion: venta.descripcion,
+                caracteristicas: venta.caracteristicas,
+                precio: parseFloat(venta.precio),
             }
             //************************
             , function (err, res) {
@@ -61,8 +61,8 @@ Venta.agregar = (producto, resultado) => {
                     console.log("Error agregando ventas", err);
                 }
                 else {
-                    console.log("Se agregó la venta: ", producto);
-                    resultado(null, producto);
+                    console.log("Se agregó la venta: ", venta);
+                    resultado(null, venta);
                 }
             }
         );
@@ -70,15 +70,15 @@ Venta.agregar = (producto, resultado) => {
 
 
 //metodo que modifique un registro
-Venta.modificar = (producto, resultado) => {
+Venta.modificar = (venta, resultado) => {
     //obtener objeto de conexion a la base de datos
     const basedatos = bd.obtenerBaseDatos();
 
     //Ejecutar la consulta
-    basedatos.collection('productos')
+    basedatos.collection('ventas')
         //***** Código Mongo *****
         .updateOne(
-            { id: producto.id },
+            { idVenta: venta.idVenta },
             {
                 $set: {
                     urlImagen: producto.urlImagen,
@@ -110,15 +110,15 @@ Venta.modificar = (producto, resultado) => {
 
 
 //metodo que elimina un registro
-Venta.eliminar = (idProducto, resultado) => {
+Venta.eliminar = (idVenta, resultado) => {
     //obtener objeto de conexion a la base de datos
     const basedatos = bd.obtenerBaseDatos();
 
     //Ejecutar la consulta
-    basedatos.collection('productos')
+    basedatos.collection('ventas')
         //***** Código Mongo *****
         .deleteOne(
-            { id: eval(idProducto) }
+            { idVenta: eval(idVenta) }
             //************************
             , function (err, res) {
                 if (err) {
@@ -131,10 +131,10 @@ Venta.eliminar = (idProducto, resultado) => {
                 if (res.deletedCount == 0) {
                     //No se encontraron registros
                     resultado({ mensaje: "No encontrado" }, null);
-                    console.log("No se encontró el producto con id=", idProducto);
+                    console.log("No se encontró la venta con id=", idVenta);
                     return;
                 }
-                console.log("Se eliminó con éxito el producto con id=", idProducto);
+                console.log("Se eliminó con éxito la venta con id=", idVenta);
                 resultado(null, res);
 
             }

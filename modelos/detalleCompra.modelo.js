@@ -74,18 +74,18 @@ DetalleCompra.agregar = (idVenta, venta, resultado) => {
 DetalleCompra.modificar = (idVenta, detalleCompra, resultado) => {
     const basedatos = bd.obtenerBaseDatos();
 
-    basedatos.collection('paises')
+    basedatos.collection('ventas')
         //***** Código MongoDB *****
         .updateOne(
             {
                 idVenta: eval(idVenta),
-                detalleCompra: { $elemMatch: { nombre: detalleCompra.nombre } }
+                detalleCompra: { $elemMatch: { idProducto: detalleCompra.idProducto } }
             },
             {
                 $set:
                 {
-                    'regiones.$.area': region.area,
-                    'regiones.$.poblacion': region.poblacion
+                    'detalleCompra.$.idProducto': detalleCompra.idproducto,
+                    'detalleCompra.$.cantidad': detalleCompra.cantidad
                 }
             },
             //**************************
@@ -110,20 +110,20 @@ DetalleCompra.modificar = (idVenta, detalleCompra, resultado) => {
 }
 
 //Metodo que elimina un registro 
-DetalleCompra.eliminar = (idPais, nombreRegion, resultado) => {
+DetalleCompra.eliminar = (idVenta, idProducto, resultado) => {
     const basedatos = bd.obtenerBaseDatos();
 
-    basedatos.collection('paises')
+    basedatos.collection('ventas')
         //***** Código MongoDB *****
         .updateOne(
             {
-                id: eval(idPais)
+                idVenta: eval(idVenta)
             },
             {
                 $pull: {
-                    regiones:
+                    detalleCompra:
                     {
-                        nombre: nombreRegion
+                        idProducto: idProducto
                     }
                 }
             },
@@ -131,17 +131,17 @@ DetalleCompra.eliminar = (idPais, nombreRegion, resultado) => {
             function (err, res) {
                 //Verificar si hubo error ejecutando la consulta
                 if (err) {
-                    console.log("Error eliminando región:", err);
+                    console.log("Error eliminando detalle compra:", err);
                     resultado(err, null);
                 }
                 //La consulta no afectó registros
                 if (res.modifiedCount == 0) {
                     //No se encontraron registros
                     resultado({ mensaje: "No encontrado" }, null);
-                    console.log("No se encontró la región", err);
+                    console.log("No se encontró el detalle de la compra", err);
                     return;
                 }
-                console.log("Región eliminada con nombre :", nombreRegion);
+                console.log("Producto eliminado con id :", idProducto);
                 resultado(null, res);
             }
         );

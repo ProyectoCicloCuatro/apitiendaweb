@@ -1,5 +1,5 @@
 //cargar el modelo de paises
-const venta = require('../modelos/detalleCompra.modelo');
+const detalleCompra = require('../modelos/detalleCompra.modelo');
 
 //metodo web para obtener la lista de regiones
 exports.listar = (req, res) => {
@@ -61,7 +61,7 @@ exports.modificar = (req, res) => {
 
 //Metodo web para eliminar una region
 exports.eliminar = (req, res) => {
-    detalleCompra.eliminar(req.params.id, req.params.nombre,
+    detalleCompra.eliminar(req.params.id, req.params.idProducto,
         (err, data) => {
             //Verificar si hubo error
             if (err) {
@@ -69,7 +69,7 @@ exports.eliminar = (req, res) => {
             }
             else {
                 //Se devuelve mensaje
-                res.send({ mensaje: `La región con nombre:${req.params.nombre} fue eliminada` });
+                res.send({ mensaje: `La producoto con id:${req.params.idProducto} fue eliminada` });
             }
         });
 }

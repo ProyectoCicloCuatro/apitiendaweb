@@ -12,6 +12,6 @@ module.exports = (app) => {
     app.post("/detallecompra/modificar/:id", detalleCompra.modificar);
 
     //metodo de la API que elimina (DELETE) una región
-    app.delete("/detallecompra/:id/:nombre", detalleCompra.eliminar);
+    app.delete("/detallecompra/:id/:idProducto", detalleCompra.eliminar);
 
 }
