@@ -20,6 +20,8 @@ require('./rutas/pais.rutas')(app);
 require('./rutas/region.rutas')(app);
 require('./rutas/producto.rutas')(app);
 require('./rutas/ciudad.rutas')(app);
+require('./rutas/detalleCompra.rutas')(app);
+require('./rutas/venta.rutas')(app);
 
 app.listen(puerto, ()=> {
     console.log(`Servicio iniciado a través de la url http://localhost:${puerto}`)

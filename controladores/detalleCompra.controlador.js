@@ -1,12 +1,12 @@
 //cargar el modelo de paises
-const region = require('../modelos/region.modelo');
+const venta = require('../modelos/detalleCompra.modelo');
 
 //metodo web para obtener la lista de regiones
 exports.listar = (req, res) => {
-    venta.listar(req.params.id, (err, datos) => {
+    detalleCompra.listar(req.params.id, (err, datos) => {
         //Verificar si hubo error
         if (err) {
-            res.status(500).send({ mensaje: 'Error obteniendo la lista de ventas' });
+            res.status(500).send({ mensaje: 'Error obteniendo la lista de detalle de compra' });
         }
         else {
             //devolver los registros obtenidos
@@ -23,11 +23,11 @@ exports.agregar = (req, res) => {
         res.status(400).send({ message: 'El contenido del mensaje debe tener información con la región' });
     }
 
-    region.agregar(req.params.id, req.body,
+    detalleCompra.agregar(req.params.id, req.body,
         (err, data) => {
             //Verificar si hubo error
             if (err) {
-                res.status(500).send({ mensaje: 'Error agregando la región' });
+                res.status(500).send({ mensaje: 'Error agregando el detalleCompra' });
             }
             else {
                 //Se devuelve el registro actualizado
@@ -42,14 +42,14 @@ exports.agregar = (req, res) => {
 exports.modificar = (req, res) => {
     //validar que la solicitud tenga datos
     if (!req.body) {
-        res.status(400).send({ message: 'El contenido del mensaje debe tener información con la región' });
+        res.status(400).send({ message: 'El contenido del mensaje debe tener información con el detalle de la compra' });
     }
 
-    region.modificar(req.params.id, req.body,
+    detalleCompra.modificar(req.params.id, req.body,
         (err, data) => {
             //Verificar si hubo error
             if (err) {
-                res.status(500).send({ mensaje: 'Error actualizando la región ' });
+                res.status(500).send({ mensaje: 'Error actualizando detalle de la compra ' });
             }
             else {
                 //Se devuelve el registro actualizado
@@ -61,11 +61,11 @@ exports.modificar = (req, res) => {
 
 //Metodo web para eliminar una region
 exports.eliminar = (req, res) => {
-    region.eliminar(req.params.id, req.params.nombre,
+    detalleCompra.eliminar(req.params.id, req.params.nombre,
         (err, data) => {
             //Verificar si hubo error
             if (err) {
-                res.status(500).send({ mensaje: 'Error eliminando la región ' });
+                res.status(500).send({ mensaje: 'Error eliminando el detalle de la compra ' });
             }
             else {
                 //Se devuelve mensaje
