@@ -16,9 +16,9 @@ Venta.listar = function (resultado) {
         .find({})
         .project(
             {
-                fecha: 1,
-                idCliente: 2,
-                idVenta: 3,
+                id: 1,
+                fecha: 2,
+                idCliente: 3,
                 valor: 4,
                 confirmado: 5,
                 detalleCompra: 6
@@ -48,11 +48,11 @@ Venta.agregar = (venta, resultado) => {
         .insertOne(
             {
                 id: parseInt(venta.idVenta),
-                urlImagen: venta.urlImagen,
-                nombre: venta.nombre,
-                descripcion: venta.descripcion,
-                caracteristicas: venta.caracteristicas,
-                precio: parseFloat(venta.precio),
+                fecha: venta.fecha,
+                idcliente: parseInt(venta.idCliente),
+                valor: venta.valor,
+                confirmado: venta.confirmado,
+                detalleCompra: detalleCompra,
             }
             //************************
             , function (err, res) {
@@ -78,31 +78,31 @@ Venta.modificar = (venta, resultado) => {
     basedatos.collection('ventas')
         //***** Código Mongo *****
         .updateOne(
-            { idVenta: venta.idVenta },
+            { id: venta.id },
             {
                 $set: {
-                    urlImagen: producto.urlImagen,
-                    nombre: producto.nombre,
-                    descripcion: producto.descripcion,
-                    caracteristicas: producto.caracteristicas,
-                    precio: producto.precio,
+                    fecha: venta.fecha,
+                    idcliente: parseInt(venta.idCliente),
+                    valor: venta.valor,
+                    confirmado: venta.confirmado,
+                    detalleCompra: detalleCompra,
                 }
             }
             //************************
             , function (err, res) {
                 if (err) {
                     resultado(err, null);
-                    console.log("Error modificando producto", err);
+                    console.log("Error modificando venta", err);
                 }
                 //La consulta no afectó registros
                 if (res.modifiedCount == 0) {
                     //No se encontraron registros
                     resultado({ mensaje: "No encontrado" }, null);
-                    console.log("No se encontró el producto ", producto);
+                    console.log("No se encontró la venta ", venta);
                     return;
                 }
-                console.log("Se modificó con éxito el producto: ", producto);
-                resultado(null, producto);
+                console.log("La venta ",venta," se modificó con éxito: ");
+                resultado(null, venta);
 
             }
         );
@@ -110,7 +110,7 @@ Venta.modificar = (venta, resultado) => {
 
 
 //metodo que elimina un registro
-Venta.eliminar = (idVenta, resultado) => {
+Venta.eliminar = (id, resultado) => {
     //obtener objeto de conexion a la base de datos
     const basedatos = bd.obtenerBaseDatos();
 
@@ -118,12 +118,12 @@ Venta.eliminar = (idVenta, resultado) => {
     basedatos.collection('ventas')
         //***** Código Mongo *****
         .deleteOne(
-            { idVenta: eval(idVenta) }
+            { id: eval(id) }
             //************************
             , function (err, res) {
                 if (err) {
                     resultado(err, null);
-                    console.log("Error eliminando producto", err);
+                    console.log("Error eliminando venta", err);
                     return;
                 }
 
@@ -131,10 +131,10 @@ Venta.eliminar = (idVenta, resultado) => {
                 if (res.deletedCount == 0) {
                     //No se encontraron registros
                     resultado({ mensaje: "No encontrado" }, null);
-                    console.log("No se encontró la venta con id=", idVenta);
+                    console.log("No se encontró la venta con id=", id);
                     return;
                 }
-                console.log("Se eliminó con éxito la venta con id=", idVenta);
+                console.log("Se eliminó con éxito la venta con id=", id);
                 resultado(null, res);
 
             }

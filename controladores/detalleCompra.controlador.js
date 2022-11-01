@@ -1,5 +1,5 @@
 //cargar el modelo de paises
-const detalleCompra = require('../modelos/detalleCompra.modelo');
+const detalleCompra = require('../modelos/detallecompra.modelo');
 
 //metodo web para obtener la lista de regiones
 exports.listar = (req, res) => {

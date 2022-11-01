@@ -1,6 +1,6 @@
 module.exports = (app) => {
 
-    const detalleCompra = require('../controladores/detalleCompra.controlador');
+    const detalleCompra = require('../controladores/detallecompra.controlador');
 
     //metodo de la API que obtiene la lista de paises
     app.get("/detallecompra/:id", detalleCompra.listar);

@@ -112,7 +112,8 @@ DetalleCompra.modificar = (idVenta, detalleCompra, resultado) => {
 //Metodo que elimina un registro 
 DetalleCompra.eliminar = (idVenta, idProducto, resultado) => {
     const basedatos = bd.obtenerBaseDatos();
-
+    console.log(idVenta);
+    console.log(idProducto);
     basedatos.collection('ventas')
         //***** Código MongoDB *****
         .updateOne(
@@ -123,7 +124,7 @@ DetalleCompra.eliminar = (idVenta, idProducto, resultado) => {
                 $pull: {
                     detalleCompra:
                     {
-                        idProducto: idProducto
+                        idProducto: eval(idProducto)
                     }
                 }
             },
