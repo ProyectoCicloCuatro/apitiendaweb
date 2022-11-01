@@ -18,10 +18,10 @@ Venta.listar = function (resultado) {
             {
                 id: 1,
                 fecha: 2,
-                idCliente: 3,
-                valor: 4,
-                confirmado: 5,
-                detalleCompra: 6
+                valor: 3,
+                confirmado: 4,
+                detalleCompra: 5,
+                cliente: 6
             }
         )
         //************************
@@ -49,10 +49,10 @@ Venta.agregar = (venta, resultado) => {
             {
                 id: parseInt(venta.idVenta),
                 fecha: venta.fecha,
-                idcliente: parseInt(venta.idCliente),
                 valor: venta.valor,
                 confirmado: venta.confirmado,
                 detalleCompra: detalleCompra,
+                cliente: venta.cliente,
             }
             //************************
             , function (err, res) {
@@ -82,10 +82,10 @@ Venta.modificar = (venta, resultado) => {
             {
                 $set: {
                     fecha: venta.fecha,
-                    idcliente: parseInt(venta.idCliente),
                     valor: venta.valor,
                     confirmado: venta.confirmado,
                     detalleCompra: detalleCompra,
+                    cliente: venta.cliente,
                 }
             }
             //************************
