@@ -17,7 +17,10 @@ DetalleCompra.listar = function (idVenta, resultado) {
             {
                 $project: {
                     'detalleCompra.idProducto': 1,
-                    'detalleCompra.cantidad': 2
+                    'detalleCompra.cantidad': 2,
+                    'detalleCompra.nombreProducto': 3,
+                    'detalleCompra.vrUnitario': 4,
+                    'detalleCompra.subTotal': 5
                 }
             }]
         )
@@ -48,7 +51,10 @@ DetalleCompra.agregar = (idVenta, venta, resultado) => {
                     detalleCompra:
                     {
                         idProducto: venta.idProducto,
-                        cantidad: venta.cantidad
+                        cantidad: venta.cantidad,
+                        nombreProducto: venta.nombreProducto,
+                        vrUnitario: venta.vrUnitario,
+                        subTotal: venta.subTotal
                     }
 
                 }
@@ -85,7 +91,10 @@ DetalleCompra.modificar = (idVenta, detalleCompra, resultado) => {
                 $set:
                 {
                     'detalleCompra.$.idProducto': detalleCompra.idproducto,
-                    'detalleCompra.$.cantidad': detalleCompra.cantidad
+                    'detalleCompra.$.cantidad': detalleCompra.cantidad,
+                    'detalleCompra.$.nombreProducto': detalleCompra.nombreProducto,
+                    'detalleCompra.$.vrUnitario': detalleCompra.vrUnitario,
+                    'detalleCompra.$.subTotal': detalleCompra.subTotal
                 }
             },
             //**************************

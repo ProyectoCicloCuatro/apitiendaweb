@@ -1,11 +1,48 @@
 //cargar la libreria con la conexion a la bd
 var bd = require('./bd');
 
+
 //constructor
 const Producto = function () { }
 
+Producto.obtener = function (idProducto, respuesta) {
+    const basedatos = bd.obtenerBaseDatos();
+
+    //***** codigo MONGO para listar los productos
+    const productos = basedatos.collection('productos')
+        .aggregate([
+            { $match: { id: eval(idProducto) } },
+            {
+                $project: {
+                    id: 1,
+                    urlImagen: 1,
+                    nombre: 1,
+                    descripcion: 1,
+                    caracteristicas: 1,
+                    precio: 1,
+                    cantidad: 1
+                }
+            }
+        ]).toArray(
+            function (error, resultado) {
+                if (error) {
+                    console.log('Error listando los productos ', error);
+                    respuesta(error, null);
+                }
+                else {
+                    if (resultado) {
+                        respuesta(null, resultado[0]);
+                    }
+                    else {
+                        respuesta(null, null);
+                    }
+                }
+            });
+
+}
+
 //metodo que obtiene la lista de paises
-Producto.listar = function (resultado) {
+Producto.listar = function (respuesta) {
     //obtener objeto de conexion a la base de datos
     const basedatos = bd.obtenerBaseDatos();
 
@@ -21,24 +58,25 @@ Producto.listar = function (resultado) {
                 nombre: 3,
                 descripcion: 4,
                 caracteristicas: 5,
-                precio: 6
+                precio: 6,
+                cantidad: 7
             }
         )
         //************************
-        .toArray(function (err, res) {
-            if (err) {
-                //window.alert("Error listando productos", err),
-                console.log("Error listando productos", err)
-                resultado(err, null)
+        .toArray(function (error, resultado) {
+            if (error) {
+                //window.alert("Error listando productos", error),
+                console.log("Error listando productos", error)
+                respuesta(err, null)
             }
             else {
-                resultado(null, res)
+                respuesta(null, resultado)
             }
         });
 }
 
 //metodo que agrega un registro
-Producto.agregar = (producto, resultado) => {
+Producto.agregar = function (producto, respuesta) {
     //obtener objeto de conexion a la base de datos
     const basedatos = bd.obtenerBaseDatos();
 
@@ -53,16 +91,17 @@ Producto.agregar = (producto, resultado) => {
                 descripcion: producto.descripcion,
                 caracteristicas: producto.caracteristicas,
                 precio: parseFloat(producto.precio),
+                cantidad: parseInt(producto.cantidad),
             }
             //************************
-            , function (err, res) {
-                if (err) {
-                    resultado(err, null);
-                    console.log("Error agregando producto", err);
+            , function (error, resultado) {
+                if (error) {
+                   console.log("Error agregando producto", error);
+                   respuesta(error, null);
                 }
                 else {
                     console.log("Se agregó el producto: ", producto);
-                    resultado(null, producto);
+                    respuesta(null, producto);
                 }
             }
         );
@@ -70,7 +109,7 @@ Producto.agregar = (producto, resultado) => {
 
 
 //metodo que modifique un registro
-Producto.modificar = (producto, resultado) => {
+Producto.modificar = function (producto, respuesta) {
     //obtener objeto de conexion a la base de datos
     const basedatos = bd.obtenerBaseDatos();
 
@@ -86,31 +125,70 @@ Producto.modificar = (producto, resultado) => {
                     descripcion: producto.descripcion,
                     caracteristicas: producto.caracteristicas,
                     precio: producto.precio,
+                    cantidad: producto.cantidad,
                 }
             }
             //************************
-            , function (err, res) {
-                if (err) {
-                    resultado(err, null);
-                    console.log("Error modificando producto", err);
+            , function (error, resultado) {
+                if (error) {
+                    respuesta(error, null);
+                    console.log("Error modificando producto", error);
                 }
                 //La consulta no afectó registros
                 if (res.modifiedCount == 0) {
                     //No se encontraron registros
-                    resultado({ mensaje: "No encontrado" }, null);
+                    respuesta({ mensaje: "No encontrado" }, null);
                     console.log("No se encontró el producto ", producto);
                     return;
                 }
                 console.log("Se modificó con éxito el producto: ", producto);
-                resultado(null, producto);
+                respuesta(null, producto);
 
             }
         );
 }
 
+Producto.actualizarExistencia = function (id, unidades, respuesta) {
+    const basedatos = bd.obtenerBaseDatos();
+
+    this.obtener(id,
+        function (error, resultado) {
+            if (resultado) {
+                //***** codigo MONGO para moidifcar un Documento producto
+                basedatos.collection('productos')
+                    .updateOne(
+                        { id: id },
+                        {
+                            $set: {
+                                cantidad: resultado.cantidad-unidades,
+                            }
+                        }
+                        //*****
+                        , function (error, resultado) {
+                            if (error) {
+                                console.log('Error actualizando existencia ', error);
+                                respuesta(error, null);
+                                return;
+                            }
+                            //La consulta no afectó registros
+                            if (resultado.modifiedCount == 0) {
+                                //No se encontraron registros
+                                respuesta({ mensaje: `Existencia no actualizada del producto ${resultado.nombre}` }, null);
+                                console.log(`Existencia no actualizada del producto ${resultado.nombre}`);
+                                return;
+                            }
+
+                            respuesta(null, `El inventario del producto ${resultado.nombre} fue actualizado`);
+
+                        }
+
+                    );
+            }
+        });
+}
 
 //metodo que elimina un registro
-Producto.eliminar = (idProducto, resultado) => {
+Producto.eliminar = function (idProducto, respuesta) {
     //obtener objeto de conexion a la base de datos
     const basedatos = bd.obtenerBaseDatos();
 
@@ -120,22 +198,22 @@ Producto.eliminar = (idProducto, resultado) => {
         .deleteOne(
             { id: eval(idProducto) }
             //************************
-            , function (err, res) {
-                if (err) {
-                    resultado(err, null);
-                    console.log("Error eliminando producto", err);
+            , function (error, resultado) {
+                if (error) {
+                    respuesta(err, null);
+                    console.log("Error eliminando producto", error);
                     return;
                 }
 
                 //La consulta no afectó registros
-                if (res.deletedCount == 0) {
+                if (resultado.deletedCount == 0) {
                     //No se encontraron registros
-                    resultado({ mensaje: "No encontrado" }, null);
+                    respuesta({ mensaje: "No encontrado" }, null);
                     console.log("No se encontró el producto con id=", idProducto);
                     return;
                 }
                 console.log("Se eliminó con éxito el producto con id=", idProducto);
-                resultado(null, res);
+                respuesta(null, resultado);
 
             }
         );

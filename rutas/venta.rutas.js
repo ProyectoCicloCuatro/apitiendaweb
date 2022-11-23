@@ -1,18 +1,17 @@
 module.exports = (app) => {
 
-    const controlVenta = require('../controladores/venta.controlador');
+    const controladorVenta = require("../controladores/venta.controlador");
+    const controladorDetalle = require("../controladores/detalle.controlador");
 
-    //metodo de la API que obtiene la lista de productos
-    app.get("/ventas", controlVenta.listar);
+    app.get("/ventas", controladorVenta.listar);
+    app.get("/ventas/:id", controladorVenta.obtener);
+    app.post("/ventas", controladorVenta.agregar);
 
-    //metodo de la API que agrega un producto
-    app.post("/ventas/agregar", controlVenta.agregar);
+    app.post("/ventas/pagar/:id", controladorVenta.pagar);
 
-    //metodo de la API que modifica un producto
-    app.post("/ventas/modificar", controlVenta.modificar);
+    app.delete("/ventas/:id", controladorVenta.eliminar);
 
-    //metodo de la API que elimina un producto
-    app.delete("/ventas/:id", controlVenta.eliminar);
+    app.get("/ventas/detalle/:id", controladorDetalle.listar);
+    app.post("/ventas/detalle/:id", controladorDetalle.agregar);
 
 }
-
